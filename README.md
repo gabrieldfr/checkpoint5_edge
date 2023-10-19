@@ -63,4 +63,10 @@ Após ter baixado o arquivo cru, abra o Postman, vá na aba de import e selecion
 - Sensor de luz (fotoresistor)
 
 ## Código para o esp32
-
+- Para acessar nosso código, vá para esse arquivo em nosso repositório: https://github.com/gabrieldfr/checkpoint5_edge/blob/main/CodigoEsp32.c
+## Mudanças a serem feitas no código
+- Linha 17: Mude "Your broker adress" pelo endereço de IP do seu broker
+- Linha 25: Mude "YourWiFiSSID" pelo nome do wifi que você estará utilizando para conectar o esp32 com a rede
+- Linha 26: Mude "YourWifiPassword" pela senha do seu Wifi
+## Código em python para realizar a leitura dos dados do servidor obtidos pelo ESP32
+- Para acessar nosso código, vá para esse arquivo em nosso repositório: https://github.com/gabrieldfr/checkpoint5_edge/blob/main/LeituraDosDadosServidor.py
