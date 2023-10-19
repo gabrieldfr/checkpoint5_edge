@@ -70,3 +70,5 @@ Após ter baixado o arquivo cru, abra o Postman, vá na aba de import e selecion
 - Linha 26: Mude "YourWifiPassword" pela senha do seu Wifi
 ## Código em python para realizar a leitura dos dados do servidor obtidos pelo ESP32
 - Para acessar nosso código, vá para esse arquivo em nosso repositório: https://github.com/gabrieldfr/checkpoint5_edge/blob/main/LeituraDosDadosServidor.py
+- Para fornecer esses dados vitais, contamos com a biblioteca requests. Ela age como nossa "ponte de comunicação" com o servidor, permitindo-nos buscar, de forma eficiente, as informações relevantes para nossa análise. A biblioteca requests desempenha um papel fundamental ao coletar, armazenar e tornar acessíveis esses dados.
+- Além disso, nosso projeto oferece a funcionalidade adicional de representação visual dos dados coletados. Isso é realizado com a ajuda da biblioteca matplotlib. Com essa ferramenta poderosa, podemos criar gráficos detalhados e informativos que auxiliam na interpretação das condições do ambiente.
