@@ -1,61 +1,27 @@
-import requests
-import matplotlib.pyplot as plt
+import paho.mqtt.client as mqtt
+mqtt_topics = [("/TEF/lamp105/attrs/luminosity", 0), ("/TEF/lamp105/attrs/humidity", 0), ("/TEF/lamp105/attrs/temperature", 0)] 
 
-# Função para obter os dados a partir da API
-def obter_dados(lastN, attribute):
-    url = f"http://46.17.108.113:8666/STH/v1/contextEntities/type/Lamp/id/urn:ngsi-ld:Lamp:001/attributes/{attribute}?lastN={lastN}"
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
 
-    headers = {
-        'fiware-service': 'smart',
-        'fiware-servicepath': '/'
-    }
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    # client.subscribe("/TEF/lamp108/attrs/l")
+    client.subscribe(mqtt_topics)
+        
+# The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    print(msg.topic+" "+str(msg.payload))
 
-    response = requests.get(url, headers=headers)
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
 
-    if response.status_code == 200:
-        data = response.json()
-        data_list = data['contextResponses'][0]['contextElement']['attributes'][0]['values']
-        return data_list
-    else:
-        print(f"Erro ao obter dados: {response.status_code}")
-        return []
+client.connect("46.17.108.113", 1883, 60)
 
-# Função para criar e exibir o gráfico
-def plotar_grafico(data_list, attribute, ylabel, color):
-    if not data_list:
-        print("Nenhum dado disponível para plotar.")
-        return
-
-    values = [entry['attrValue'] for entry in data_list]
-    tempos = [entry['recvTime'] for entry in data_list]
-
-    plt.figure(figsize=(12, 6))
-    plt.plot(tempos, values, marker='o', linestyle='-', color=color)
-    plt.title(f'Gráfico de {attribute} em Função do Tempo')
-    plt.xlabel('Tempo')
-    plt.ylabel(ylabel)
-    plt.xticks(rotation=45)
-    plt.grid(True)
-
-    plt.tight_layout()
-    plt.show()
-
-# Solicitar ao usuário um valor "lastN" entre 1 e 100
-while True:
-    try:
-        lastN = int(input("Digite um valor para lastN (entre 1 e 100): "))
-        if 1 <= lastN <= 100:
-            break
-        else:
-            print("O valor deve estar entre 1 e 100. Tente novamente.")
-    except ValueError:
-        print("Por favor, digite um número válido.")
-
-# Obter os dados de luminosidade, temperatura e umidade e plotar os gráficos
-luminosity_data = obter_dados(lastN, "luminosity")
-temperature_data = obter_dados(lastN, "temperature")
-humidity_data = obter_dados(lastN, "humidity")
-
-plotar_grafico(luminosity_data, "Luminosidade", "Luminosidade", 'r')
-plotar_grafico(temperature_data, "Temperatura", "Temperatura (°C)", 'b')
-plotar_grafico(humidity_data, "Umidade", "Umidade (%)", 'g')
+# Blocking call that processes network traffic, dispatches callbacks and
+# handles reconnecting.
+# Other loop*() functions are available that give a threaded interface and a
+# manual interface.
+client.loop_forever()
